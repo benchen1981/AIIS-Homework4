@@ -3,6 +3,8 @@ import time
 from typing import Generator, List, Dict
 from google import genai
 from google.genai import types as genai_types
+from google.api_core.exceptions import ServiceUnavailable, ResourceExhausted, InternalServerError
+from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 import streamlit as st
 
