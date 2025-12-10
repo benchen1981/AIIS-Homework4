@@ -3,18 +3,21 @@ import time
 from typing import Generator, List, Dict
 from google import genai
 from google.genai import types as genai_types
-from google.api_core.exceptions import ServiceUnavailable, ResourceExhausted, InternalServerError
-from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+import streamlit as st
 
 # Load environment variables
 load_dotenv()
 
 class GeminiService:
     def __init__(self):
+        # Try getting key from environment (local) or Streamlit secrets (cloud)
         self.api_key = os.getenv("GOOGLE_API_KEY")
+        if not self.api_key and "GOOGLE_API_KEY" in st.secrets:
+            self.api_key = st.secrets["GOOGLE_API_KEY"]
+            
         if not self.api_key:
-            raise ValueError("GOOGLE_API_KEY not found in environment variables.")
+            raise ValueError("Configuration Error: GOOGLE_API_KEY not found in environment variables or st.secrets.")
         
         self.client = genai.Client(api_key=self.api_key)
         # Switching to the generic 'latest' alias which usually points to the most stable available Flash model
