@@ -1,0 +1,5 @@
+google-genai==1.54.0
+streamlit
+python-dotenv
+tenacity
+google-auth
